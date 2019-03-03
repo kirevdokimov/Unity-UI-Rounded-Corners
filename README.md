@@ -16,5 +16,10 @@ This components and shaders allows you to add rounded corners to UI elements!
 # Features
 ## Keeps round while resizing
 ![](gif-01.gif)
+## Better quality than sprites
+![](image-00.png)
 ## Supports Unity Mask
 ![](gif-02.gif)
+## Supports Tint
+![](gif-04.gif)
+
