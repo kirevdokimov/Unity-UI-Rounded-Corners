@@ -15,6 +15,13 @@ These components and shaders allows you to add rounded corners to UI elements!
 {
   "scopedRegistries": [
     {
+      "name": "Unity",
+      "url": "https://packages.unity.com",
+      "scopes": [
+        "com.unity"
+      ]
+    },
+    {
       "name": "XCrew",
       "url": "http://xcrew.dev",
       "scopes": [
