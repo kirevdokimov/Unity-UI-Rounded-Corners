@@ -76,7 +76,7 @@ Shader "UI/RoundedCorners/Texture" {
                 float alpha = AlphaForRoundedCorners(i.uv, _Width, _Height, _Radius);
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv) * i.color;
-                col.a = alpha;
+                col.a = min(col.a, alpha);
                 return col;
             }
             ENDCG
