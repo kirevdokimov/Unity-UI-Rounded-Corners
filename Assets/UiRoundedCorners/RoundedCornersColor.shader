@@ -1,7 +1,7 @@
 ﻿Shader "UI/RoundedCorners/Color" {
     Properties {
         _Radius ("Radius px", Float) = 8
-				// Size of image
+		// Size of image
         _Width ("Width px", Float) = 100
         _Height ("Height px", Float) = 100
 
@@ -44,7 +44,7 @@
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-						#include "RoundedCorners.cginc"
+			#include "RoundedCorners.cginc"
 
             struct appdata {
                 float4 vertex : POSITION;
@@ -71,7 +71,7 @@
             }
 
             fixed4 frag (v2f i) : SV_Target {
-								float alpha = AlphaForRoundedCorners(i.uv, _Width, _Height, _Radius);
+				float alpha = AlphaForRoundedCorners(i.uv, _Width, _Height, _Radius);
                 // sample the texture
                 fixed4 col = i.color;
                 col.a = alpha * i.color.a;
