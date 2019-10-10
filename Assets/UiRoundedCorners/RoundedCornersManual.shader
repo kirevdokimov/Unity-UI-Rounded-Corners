@@ -1,7 +1,9 @@
-﻿Shader "UI/RoundedCorners/Color" {
+Shader "UI/RoundedCorners/Manual" {
     Properties {
+        _MainTex ("Texture", 2D) = "white" {}
+        _Color("Color", Color) = (1,1,1,1)
+        [Space(10)]
         _Radius ("Radius px", Float) = 8
-		// Size of image
         _Width ("Width px", Float) = 100
         _Height ("Height px", Float) = 100
 
@@ -44,20 +46,21 @@
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-			#include "RoundedCorners.cginc"
+            #include "RoundedCorners.cginc"
 
             struct appdata {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
-                float4 color : COLOR; // set from Image component property
             };
 
             struct v2f {
-                float4 vertex : SV_POSITION;
                 float2 uv : TEXCOORD0;
-                float4 color : COLOR;
+                float4 vertex : SV_POSITION;
             };
 
+            sampler2D _MainTex;
+            float4 _MainTex_ST;
+            float4 _Color;
             float _Radius;
             float _Width;
             float _Height;
@@ -65,16 +68,15 @@
             v2f vert (appdata v) {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = v.uv;
-                o.color = v.color;
+                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target {
-				float alpha = AlphaForRoundedCorners(i.uv, _Width, _Height, _Radius);
+                float alpha = AlphaForRoundedCorners(i.uv, _Width, _Height, _Radius);
                 // sample the texture
-                fixed4 col = i.color;
-                col.a = alpha * i.color.a;
+                fixed4 col = tex2D(_MainTex, i.uv) * _Color;
+                col.a = min(col.a, alpha);
                 return col;
             }
             ENDCG
