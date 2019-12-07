@@ -44,7 +44,7 @@
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-			#include "RoundedCorners.cginc"
+            #include "SDFRoundedRectangle.cginc"
 
             struct appdata {
                 float4 vertex : POSITION;
@@ -71,8 +71,7 @@
             }
 
             fixed4 frag (v2f i) : SV_Target {
-				float alpha = AlphaForRoundedCorners(i.uv, _Width, _Height, _Radius);
-                // sample the texture
+				float alpha = CalcAlpha(i.uv, float2(_Width, _Height), _Radius);
                 fixed4 col = i.color;
                 col.a = alpha * i.color.a;
                 return col;
