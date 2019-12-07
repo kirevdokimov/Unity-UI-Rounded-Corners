@@ -10,30 +10,9 @@ These components and shaders allows you to add rounded corners to UI elements!
 ## How to install
 ### Package Manager
 - Open `%projectname%/Packages/manifest.json`
-- Add following :
+- Add following to dependencies section:
 ```
-{
-  "scopedRegistries": [
-    {
-      "name": "Unity",
-      "url": "https://packages.unity.com",
-      "scopes": [
-        "com.unity"
-      ]
-    },
-    {
-      "name": "XCrew",
-      "url": "http://xcrew.dev",
-      "scopes": [
-        "com.nobi"
-      ]
-    }
-  ],
-  "dependencies": {
-    "com.nobi.roundedcorners": "1.0.1",
-    ...
-  }
-}
+"com.nobi.roundedcorners": "https://github.com/Nobinator/Unity-UI-Rounded-Corners.git"
 ```
 
 ### Unity Package
@@ -45,6 +24,7 @@ Get `.unitypackage` from [releases](https://github.com/Nobinator/Unity-UI-Rounde
 - Сreate new material with one of the following shaders
   - `UI/RoundedCorners/Color`
   - `UI/RoundedCorners/Texture`
+  - `UI/RoundedCorners/Manual`
 - Attach material to `Image With Rounded Corners`
 - Profit
 
