@@ -76,8 +76,7 @@ float CalcAlphaForIndependentCorners(float2 samplePosition, float2 halfSize, flo
     
     float2 circle3Position = translate(samplePosition, -halfSize + r.w);
     float c3 = circle(circle3Position, r.w);
-    
-    
+        
     float dist = max(r1,min(min(min(min(r2, c0), c1), c2), c3));
     return AntialiasedCutoff(dist);
 }

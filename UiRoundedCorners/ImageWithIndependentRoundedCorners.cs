@@ -1,12 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
 
+[ExecuteInEditMode]
 public class ImageWithIndependentRoundedCorners : MonoBehaviour {
-	[SerializeField] private Vector4 r;
-	[SerializeField] private Vector2 size;
-	[SerializeField] private Material material;
+	
+	public Vector4 r;
+	public Material material;
 	
 	// xy - position,
 	// zw - halfSize
@@ -15,21 +15,22 @@ public class ImageWithIndependentRoundedCorners : MonoBehaviour {
 	private readonly int prop_halfSize = Shader.PropertyToID("_halfSize");
 	private readonly int prop_radiuses = Shader.PropertyToID("_r");
 	private readonly int prop_rect2props = Shader.PropertyToID("_rect2props");
-	protected void OnValidate(){
-		Eval();
-	}
 	
-	private void OnRenderObject(){
-		size = ((RectTransform) transform).rect.size;
-		Eval();
-	}
-
 	// Vector2.right rotated clockwise by 45 degrees
 	private static readonly Vector2 wNorm = new Vector2(.7071068f, -.7071068f);
 	// Vector2.right rotated counter-clockwise by 45 degrees
 	private static readonly Vector2 hNorm = new Vector2(.7071068f, .7071068f);
+
 	
-	private void Eval(){
+	void OnRectTransformDimensionsChange(){
+		Refresh();
+	}
+	
+	private void OnValidate(){
+		Refresh();
+	}
+	
+	private void RecalculateProps(Vector2 size){
 
 		// Vector that goes from left to right sides of rect2
 		var aVec = new Vector2(size.x, -size.y + r.x + r.z);
@@ -59,10 +60,19 @@ public class ImageWithIndependentRoundedCorners : MonoBehaviour {
 		var origin = ePoint + egVec + wNorm * halfWidth + hNorm * -halfHeight;
 		rect2props.x = origin.x;
 		rect2props.y = origin.y;
-		//
+	}
+
+	private void Refresh(){
+		var rect = ((RectTransform) transform).rect;
+		ValidateConstraints(rect);
+		RecalculateProps(rect.size);
 		material.SetVector(prop_rect2props, rect2props);
-		material.SetVector(prop_halfSize, size * .5f);
+		material.SetVector(prop_halfSize, rect.size * .5f);
 		material.SetVector(prop_radiuses, r);
 	}
-    
+	
+	private void ValidateConstraints(Rect rect){
+		// TODO Constraints
+	}
+
 }
