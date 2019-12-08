@@ -35,3 +35,49 @@ float CalcAlpha(float2 samplePosition, float2 size, float radius){
     float distToRect = roundedRectangle(samplePositionTranslated, radius * .5, size * .5);
     return AntialiasedCutoff(distToRect);
 }
+
+inline float2 translate(float2 samplePosition, float2 offset){
+    return samplePosition - offset;
+}
+
+float intersect(float shape1, float shape2){
+    return max(shape1, shape2);
+}
+
+float2 rotate(float2 samplePosition, float rotation){
+    const float PI = 3.14159;
+    float angle = rotation * PI * 2 * -1;
+    float sine, cosine;
+    sincos(angle, sine, cosine);
+    return float2(cosine * samplePosition.x + sine * samplePosition.y, cosine * samplePosition.y - sine * samplePosition.x);
+}
+
+float circle(float2 position, float radius){
+    return length(position) - radius;
+}
+
+float CalcAlphaForIndependentCorners(float2 samplePosition, float2 halfSize, float4 rect2props, float4 r){
+
+    samplePosition = (samplePosition - .5) * halfSize * 2;
+
+    float r1 = rectangle(samplePosition, halfSize);
+                
+    float2 r2Position = rotate(translate(samplePosition, rect2props.xy), .125);
+    float r2 = rectangle(r2Position, rect2props.zw);
+    
+    float2 circle0Position = translate(samplePosition, float2(-halfSize.x + r.x, halfSize.y - r.x));
+    float c0 = circle(circle0Position, r.x);
+    
+    float2 circle1Position = translate(samplePosition, float2(halfSize.x - r.y, halfSize.y - r.y));
+    float c1 = circle(circle1Position, r.y);
+    
+    float2 circle2Position = translate(samplePosition, float2(halfSize.x - r.z, -halfSize.y + r.z));
+    float c2 = circle(circle2Position, r.z);
+    
+    float2 circle3Position = translate(samplePosition, -halfSize + r.w);
+    float c3 = circle(circle3Position, r.w);
+    
+    
+    float dist = max(r1,min(min(min(min(r2, c0), c1), c2), c3));
+    return AntialiasedCutoff(dist);
+}
