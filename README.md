@@ -19,13 +19,13 @@ These components and shaders allows you to add rounded corners to UI elements!
 Get `.unitypackage` from [releases](https://github.com/Nobinator/Unity-UI-Rounded-Corners/releases)
 
 ## How to use
-# Same roundness
+### Same roundness
 - Attach `ImageWithRoundedCorners` to gameobject with `Image`
 - Сreate new material 
 - Pick `RoundedCorners` shader
 - Attach material to `ImageWithRoundedCorners` and `Image`
 - Profit
-# Separate roundness
+### Separate roundness
 - Attach `ImageWithIndependentRoundedCorners` to gameobject with `Image`
 - Сreate new material 
 - Pick `IndependentRoundedCorners` shader
