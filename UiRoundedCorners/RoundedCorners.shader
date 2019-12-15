@@ -10,8 +10,12 @@ Shader "UI/RoundedCorners/RoundedCorners" {
         [HideInInspector] _StencilReadMask ("Stencil Read Mask", Float) = 255
         [HideInInspector] _ColorMask ("Color Mask", Float) = 15
         [HideInInspector] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
+        
+        // Definition in Properties section is required to Mask works properly
+        _WidthHeightRadius ("WidthHeightRadius", Vector) = (0,0,0,0)
         // ---
     }
+    
     SubShader {
         Tags {
             "RenderType"="Transparent"

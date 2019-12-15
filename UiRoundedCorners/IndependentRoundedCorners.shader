@@ -1,10 +1,7 @@
 ﻿Shader "UI/RoundedCorners/IndependentRoundedCorners" {
     
-    Properties{
+    Properties {
         [HideInInspector] _MainTex ("Texture", 2D) = "white" {}
-        // Comment for future to debug
-        //    _r ("Radiuses", Vector) = (0,0,0,0)
-        //    _rect2props ("Rect 2 Props", Vector) = (0,0,0,0)
         
         // --- Mask support ---
         [HideInInspector] _StencilComp ("Stencil Comparison", Float) = 8
@@ -14,11 +11,14 @@
         [HideInInspector] _StencilReadMask ("Stencil Read Mask", Float) = 255
         [HideInInspector] _ColorMask ("Color Mask", Float) = 15
         [HideInInspector] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
+        // Definition in Properties section is required to Mask works properly
+        _r ("r", Vector) = (0,0,0,0)
+        _halfSize ("halfSize", Vector) = (0,0,0,0)
+        _rect2props ("rect2props", Vector) = (0,0,0,0)
         // ---
     }
     
     SubShader {
-    
         Tags { 
             "RenderType"="Transparent"
             "Queue"="Transparent" 
@@ -41,7 +41,7 @@
         Blend SrcAlpha OneMinusSrcAlpha
         ZWrite Off
 
-        Pass{
+        Pass {
             CGPROGRAM
             
             #include "UnityCG.cginc"
