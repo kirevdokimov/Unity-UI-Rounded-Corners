@@ -1,11 +1,6 @@
-Shader "UI/RoundedCorners/Manual" {
+Shader "UI/RoundedCorners/RoundedCorners" {
     Properties {
-        _MainTex ("Texture", 2D) = "white" {}
-        _Color("Color", Color) = (1,1,1,1)
-        [Space(10)]
-        _Radius ("Radius px", Float) = 8
-        _Width ("Width px", Float) = 100
-        _Height ("Height px", Float) = 100
+        [HideInInspector] _MainTex ("Texture", 2D) = "white" {}
 
         // --- Mask support ---
         [HideInInspector] _StencilComp ("Stencil Comparison", Float) = 8
@@ -15,8 +10,12 @@ Shader "UI/RoundedCorners/Manual" {
         [HideInInspector] _StencilReadMask ("Stencil Read Mask", Float) = 255
         [HideInInspector] _ColorMask ("Color Mask", Float) = 15
         [HideInInspector] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
+        
+        // Definition in Properties section is required to Mask works properly
+        _WidthHeightRadius ("WidthHeightRadius", Vector) = (0,0,0,0)
         // ---
     }
+    
     SubShader {
         Tags {
             "RenderType"="Transparent"
@@ -31,53 +30,33 @@ Shader "UI/RoundedCorners/Manual" {
             ReadMask [_StencilReadMask]
             WriteMask [_StencilWriteMask]
         }
-
         Cull Off
         Lighting Off
         ZTest [unity_GUIZTestMode]
         ColorMask [_ColorMask]
         // ---
-        ZWrite Off
+        
         Blend SrcAlpha OneMinusSrcAlpha
+        ZWrite Off
 
         Pass {
             CGPROGRAM
+            
+            #include "UnityCG.cginc"
+            #include "SDFUtils.cginc"
+            #include "ShaderSetup.cginc"
+            
             #pragma vertex vert
             #pragma fragment frag
-
-            #include "UnityCG.cginc"
-            #include "SDFRoundedRectangle.cginc"
-
-            struct appdata {
-                float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
-            };
-
-            struct v2f {
-                float2 uv : TEXCOORD0;
-                float4 vertex : SV_POSITION;
-            };
-
+            
+            float4 _WidthHeightRadius;
             sampler2D _MainTex;
-            float4 _MainTex_ST;
-            float4 _Color;
-            float _Radius;
-            float _Width;
-            float _Height;
-
-            v2f vert (appdata v) {
-                v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                return o;
-            }
 
             fixed4 frag (v2f i) : SV_Target {
-                float alpha = CalcAlpha(i.uv, float2(_Width, _Height), _Radius);
-                fixed4 col = tex2D(_MainTex, i.uv) * _Color;
-                col.a = min(col.a, alpha);
-                return col;
+                float alpha = CalcAlpha(i.uv, _WidthHeightRadius.xy, _WidthHeightRadius.z);
+                return mixAlpha(tex2D(_MainTex, i.uv), i.color, alpha);
             }
+            
             ENDCG
         }
     }

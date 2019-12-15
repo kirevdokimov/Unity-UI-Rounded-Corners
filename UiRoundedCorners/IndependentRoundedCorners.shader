@@ -1,10 +1,8 @@
-﻿Shader "UI/RoundedCorners/Color" {
+﻿Shader "UI/RoundedCorners/IndependentRoundedCorners" {
+    
     Properties {
-        _Radius ("Radius px", Float) = 8
-		// Size of image
-        _Width ("Width px", Float) = 100
-        _Height ("Height px", Float) = 100
-
+        [HideInInspector] _MainTex ("Texture", 2D) = "white" {}
+        
         // --- Mask support ---
         [HideInInspector] _StencilComp ("Stencil Comparison", Float) = 8
         [HideInInspector] _Stencil ("Stencil ID", Float) = 0
@@ -13,14 +11,19 @@
         [HideInInspector] _StencilReadMask ("Stencil Read Mask", Float) = 255
         [HideInInspector] _ColorMask ("Color Mask", Float) = 15
         [HideInInspector] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
+        // Definition in Properties section is required to Mask works properly
+        _r ("r", Vector) = (0,0,0,0)
+        _halfSize ("halfSize", Vector) = (0,0,0,0)
+        _rect2props ("rect2props", Vector) = (0,0,0,0)
         // ---
     }
+    
     SubShader {
-        Tags {
+        Tags { 
             "RenderType"="Transparent"
-            "Queue"="Transparent"
+            "Queue"="Transparent" 
         }
-
+        
         // --- Mask support ---
         Stencil {
             Ref [_Stencil]
@@ -28,54 +31,36 @@
             Pass [_StencilOp]
             ReadMask [_StencilReadMask]
             WriteMask [_StencilWriteMask]
-        }
-
+        }    
         Cull Off
         Lighting Off
         ZTest [unity_GUIZTestMode]
         ColorMask [_ColorMask]
         // ---
-        ZWrite Off
+        
         Blend SrcAlpha OneMinusSrcAlpha
+        ZWrite Off
 
         Pass {
             CGPROGRAM
+            
+            #include "UnityCG.cginc"
+            #include "SDFUtils.cginc"
+            #include "ShaderSetup.cginc"
+            
             #pragma vertex vert
             #pragma fragment frag
-
-            #include "UnityCG.cginc"
-            #include "SDFRoundedRectangle.cginc"
-
-            struct appdata {
-                float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
-                float4 color : COLOR; // set from Image component property
-            };
-
-            struct v2f {
-                float4 vertex : SV_POSITION;
-                float2 uv : TEXCOORD0;
-                float4 color : COLOR;
-            };
-
-            float _Radius;
-            float _Width;
-            float _Height;
-
-            v2f vert (appdata v) {
-                v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = v.uv;
-                o.color = v.color;
-                return o;
-            }
-
+            
+            float4 _r;
+            float4 _halfSize;
+            float4 _rect2props;
+            sampler2D _MainTex;
+            
             fixed4 frag (v2f i) : SV_Target {
-				float alpha = CalcAlpha(i.uv, float2(_Width, _Height), _Radius);
-                fixed4 col = i.color;
-                col.a = alpha * i.color.a;
-                return col;
+                float alpha = CalcAlphaForIndependentCorners(i.uv, _halfSize.xy, _rect2props, _r);
+                return mixAlpha(tex2D(_MainTex, i.uv), i.color, alpha);
             }
+            
             ENDCG
         }
     }
