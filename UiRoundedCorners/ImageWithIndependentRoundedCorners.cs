@@ -64,15 +64,10 @@ public class ImageWithIndependentRoundedCorners : MonoBehaviour {
 
 	private void Refresh(){
 		var rect = ((RectTransform) transform).rect;
-		ValidateConstraints(rect);
 		RecalculateProps(rect.size);
 		material.SetVector(prop_rect2props, rect2props);
 		material.SetVector(prop_halfSize, rect.size * .5f);
 		material.SetVector(prop_radiuses, r);
-	}
-	
-	private void ValidateConstraints(Rect rect){
-		// TODO Constraints
 	}
 
 }
