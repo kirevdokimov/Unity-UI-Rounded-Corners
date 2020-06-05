@@ -16,7 +16,7 @@ These components and shaders allows you to add rounded corners to UI elements!
 ```
 
 ### Unity Package
-Get `.unitypackage` from [releases](https://github.com/Nobinator/Unity-UI-Rounded-Corners/releases)
+Get `.unitypackage` from [releases](https://github.com/kirevdokimov/Unity-UI-Rounded-Corners/releases)
 
 ## How to use
 ### Same roundness
