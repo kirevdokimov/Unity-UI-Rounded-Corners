@@ -12,7 +12,7 @@ These components and shaders allows you to add rounded corners to UI elements!
 - Open `%projectname%/Packages/manifest.json`
 - Add following to dependencies section:
 ```
-"com.nobi.roundedcorners": "https://github.com/Nobinator/Unity-UI-Rounded-Corners.git"
+"com.nobi.roundedcorners": "https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git"
 ```
 
 ### Unity Package
