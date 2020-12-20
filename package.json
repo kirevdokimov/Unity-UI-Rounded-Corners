@@ -3,6 +3,21 @@
     "displayName": "UI Rounded Corners",
     "version": "2.0.1",
     "description": "This package provides components and shaders that allows you to add rounded corners to UI elements!",
-    "keywords": ["UI", "Shader", "Cg", "Hlsl"],
-    "category": "UI"
+    "keywords": [
+        "UI",
+        "Shader",
+        "Cg",
+        "Hlsl"
+    ],
+    "category": "UI",
+    "files": [
+        "/LICENSE",
+        "/LICENSE.meta",
+        "/README.md",
+        "/README.md.meta",
+        "/package.json",
+        "/package.json.meta",
+        "/UiRoundedCorners",
+        "/UiRoundedCorners.meta"
+    ]
 }
