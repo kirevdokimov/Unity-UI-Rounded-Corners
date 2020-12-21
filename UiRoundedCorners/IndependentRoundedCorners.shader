@@ -11,6 +11,7 @@
         [HideInInspector] _StencilReadMask ("Stencil Read Mask", Float) = 255
         [HideInInspector] _ColorMask ("Color Mask", Float) = 15
         [HideInInspector] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
+		[HideInInspector] _Rect("Rect Display", Vector) = (0,0,1,1)
         // Definition in Properties section is required to Mask works properly
         _r ("r", Vector) = (0,0,0,0)
         _halfSize ("halfSize", Vector) = (0,0,0,0)
@@ -54,10 +55,12 @@
             float4 _r;
             float4 _halfSize;
             float4 _rect2props;
+			float4 _Rect;
             sampler2D _MainTex;
             
             fixed4 frag (v2f i) : SV_Target {
-                float alpha = CalcAlphaForIndependentCorners(i.uv, _halfSize.xy, _rect2props, _r);
+				float2 uv = (i.uv - _Rect.xy) / (_Rect.zw - _Rect.xy);
+                float alpha = CalcAlphaForIndependentCorners(uv, _halfSize.xy, _rect2props, _r);
                 return mixAlpha(tex2D(_MainTex, i.uv), i.color, alpha);
             }
             

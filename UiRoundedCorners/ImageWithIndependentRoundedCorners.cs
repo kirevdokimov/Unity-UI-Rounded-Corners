@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [ExecuteInEditMode]
-public class ImageWithIndependentRoundedCorners : MonoBehaviour {
+public class ImageWithIndependentRoundedCorners : BaseImageWithRoundedCorners {
 	
 	public Vector4 r;
 	public Material material;
@@ -15,21 +15,13 @@ public class ImageWithIndependentRoundedCorners : MonoBehaviour {
 	private readonly int prop_halfSize = Shader.PropertyToID("_halfSize");
 	private readonly int prop_radiuses = Shader.PropertyToID("_r");
 	private readonly int prop_rect2props = Shader.PropertyToID("_rect2props");
+	private readonly int prop_rect = Shader.PropertyToID("_Rect");
 	
 	// Vector2.right rotated clockwise by 45 degrees
 	private static readonly Vector2 wNorm = new Vector2(.7071068f, -.7071068f);
 	// Vector2.right rotated counter-clockwise by 45 degrees
 	private static readonly Vector2 hNorm = new Vector2(.7071068f, .7071068f);
 
-	
-	void OnRectTransformDimensionsChange(){
-		Refresh();
-	}
-	
-	private void OnValidate(){
-		Refresh();
-	}
-	
 	private void RecalculateProps(Vector2 size){
 
 		// Vector that goes from left to right sides of rect2
@@ -62,9 +54,10 @@ public class ImageWithIndependentRoundedCorners : MonoBehaviour {
 		rect2props.y = origin.y;
 	}
 
-	private void Refresh(){
+	protected override void Refresh(){
 		var rect = ((RectTransform) transform).rect;
-		RecalculateProps(rect.size);
+        this.UpdateSpriteBounds(material, prop_rect);
+        RecalculateProps(rect.size);
 		material.SetVector(prop_rect2props, rect2props);
 		material.SetVector(prop_halfSize, rect.size * .5f);
 		material.SetVector(prop_radiuses, r);
