@@ -43,3 +43,6 @@ Get `.unitypackage` from [releases](https://github.com/kirevdokimov/Unity-UI-Rou
 ![](gif-02.gif)
 ## Supports Tint
 ![](gif-04.gif)
+
+# Giving back
+If this project has helped you and you'd like to contribute back, you can always [buy me a ☕](https://ko-fi.com/X8X03ULFQ)!
