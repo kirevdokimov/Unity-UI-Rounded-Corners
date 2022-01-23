@@ -1,7 +1,6 @@
 using UnityEngine;
 
-internal static class DestroyHelper
-{
+internal static class DestroyHelper {
     internal static void Destroy(Object @object) {
 #if UNITY_EDITOR
 		if (Application.isPlaying) {
