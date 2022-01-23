@@ -1,40 +1,44 @@
 # Unity-UI-Rounded-Corners
 
-These components and shaders allows you to add rounded corners to UI elements!
+These components and shaders allow you to add rounded corners to UI elements!
 
 
 ---
 
-![](gif-00.gif)
+![](title.gif)
 
 ## How to install
-### Package Manager
+### Option 1: Package Manager (Unity 2019.3 and higher)
+![](how-to-install.gif)
+URL to copypaste: 
+```
+https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git
+```
+
+### Option 2: Package Manager (Manual)
 - Open `%projectname%/Packages/manifest.json`
-- Add following to dependencies section:
+- Add the following to the dependencies section:
 ```
 "com.nobi.roundedcorners": "https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git"
 ```
 
-### Unity Package
+### Option 3: Unity Package
 Get `.unitypackage` from [releases](https://github.com/kirevdokimov/Unity-UI-Rounded-Corners/releases)
 
 ## How to use
-### Same roundness
-- Attach `ImageWithRoundedCorners` to gameobject with `Image`
-- Сreate new material 
-- Pick `RoundedCorners` shader
-- Attach material to `ImageWithRoundedCorners` and `Image`
-- Profit
-### Separate roundness
-- Attach `ImageWithIndependentRoundedCorners` to gameobject with `Image`
-- Сreate new material 
-- Pick `IndependentRoundedCorners` shader
-- Attach material to `ImageWithIndependentRoundedCorners` and `Image`
-- Profit
+#### Symmetrical roundness
+- Add `ImageWithRoundedCorners` component to a GameObject with an `Image`
+- Adjust `Radius` property
+#### Certain roundness value for each corner
+- Add `ImageWithIndependentRoundedCorners` to a GameObject with an `Image`
+- Adjust 
+#### Important thing
+If you need to add or change the image at runtime, call `Validate()` and then `Refresh()` to update the materials.
+
 
 # Features
 ## Changing roundness separately or all at once
-![](gif-05.gif)
+![](separate-roundness.gif)
 ## Keeps round while resizing
 ![](gif-01.gif)
 ## Better quality than sprites
