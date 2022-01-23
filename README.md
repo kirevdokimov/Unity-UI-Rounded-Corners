@@ -31,7 +31,7 @@ Get `.unitypackage` from [releases](https://github.com/kirevdokimov/Unity-UI-Rou
 - Adjust `Radius` property
 #### Certain roundness value for each corner
 - Add `ImageWithIndependentRoundedCorners` to a GameObject with an `Image`
-- Adjust 
+- Adjust `r` Vector4 property. Each vector component represent radius, clockwise, starting with top-left corner
 #### Important thing
 If you need to add or change the image at runtime, call `Validate()` and then `Refresh()` to update the materials.
 
