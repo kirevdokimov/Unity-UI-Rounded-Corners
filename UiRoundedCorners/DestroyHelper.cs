@@ -1,7 +1,8 @@
 using UnityEngine;
 
-internal static class DestroyHelper {
-    internal static void Destroy(Object @object) {
+namespace Nobi.UiRoundedCorners {
+	internal static class DestroyHelper {
+		internal static void Destroy(Object @object) {
 #if UNITY_EDITOR
 		if (Application.isPlaying) {
 			Object.Destroy(@object);
@@ -9,7 +10,8 @@ internal static class DestroyHelper {
 			Object.DestroyImmediate(@object);
 		}
 #else
-		Object.Destroy(@object);
+			Object.Destroy(@object);
 #endif
+		}
 	}
 }

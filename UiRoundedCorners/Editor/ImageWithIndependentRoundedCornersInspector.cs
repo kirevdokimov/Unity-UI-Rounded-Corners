@@ -1,5 +1,3 @@
-#if UNITY_EDITOR 
-
 using UnityEditor;
 using UnityEngine.UI;
 
@@ -21,5 +19,3 @@ namespace Nobi.UiRoundedCorners.Editor {
         }
     }
 }
-
-#endif
