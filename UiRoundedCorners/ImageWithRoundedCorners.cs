@@ -10,7 +10,7 @@ namespace Nobi.UiRoundedCorners {
 		public float radius;
 		private Material material;
 
-		[HideInInspector, SerializeField] private Image image;
+		[HideInInspector, SerializeField] private MaskableGraphic image;
 
 		private void OnValidate() {
 			Validate();
