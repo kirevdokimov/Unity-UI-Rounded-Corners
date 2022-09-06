@@ -1,7 +1,7 @@
 {
     "name": "com.nobi.roundedcorners",
     "displayName": "UI Rounded Corners",
-    "version": "3.0.2",
+    "version": "3.1.0",
     "description": "This package provides components and shaders that allow you to add rounded corners to UI elements!",
     "keywords": [
         "UI",
