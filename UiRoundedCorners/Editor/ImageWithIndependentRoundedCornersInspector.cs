@@ -13,8 +13,8 @@ namespace Nobi.UiRoundedCorners.Editor {
         public override void OnInspectorGUI() {
             base.OnInspectorGUI();
 
-            if (!script.TryGetComponent<Image>(out var _)) {
-                EditorGUILayout.HelpBox("This script requires an Image component on the same gameobject", MessageType.Warning);
+            if (!script.TryGetComponent<MaskableGraphic>(out var _)) {
+                EditorGUILayout.HelpBox("This script requires an MaskableGraphic (Image or RawImage) component on the same gameobject", MessageType.Warning);
             }
         }
     }

@@ -20,7 +20,7 @@ namespace Nobi.UiRoundedCorners {
 		// xy - position,
 		// zw - halfSize
 		[HideInInspector, SerializeField] private Vector4 rect2props;
-		[HideInInspector, SerializeField] private Image image;
+		[HideInInspector, SerializeField] private MaskableGraphic image;
 
 		private void OnValidate() {
 			Validate();
