@@ -36,7 +36,7 @@ Shader "UI/RoundedCorners/RoundedCorners" {
         ColorMask [_ColorMask]
         // ---
         
-        Blend SrcAlpha OneMinusSrcAlpha
+        Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcAlpha
         ZWrite Off
 
         Pass {
