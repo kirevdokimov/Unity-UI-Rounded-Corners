@@ -43,16 +43,36 @@ Shader "UI/RoundedCorners/RoundedCorners" {
             CGPROGRAM
             
             #include "UnityCG.cginc"
+            #include "UnityUI.cginc"          
             #include "SDFUtils.cginc"
             #include "ShaderSetup.cginc"
             
             #pragma vertex vert
             #pragma fragment frag
-            
+
+            #pragma multi_compile_local _ UNITY_UI_CLIP_RECT
+            #pragma multi_compile_local _ UNITY_UI_ALPHACLIP
+
             float4 _WidthHeightRadius;
             sampler2D _MainTex;
+            fixed4 _TextureSampleAdd;
+            float4 _ClipRect;
 
             fixed4 frag (v2f i) : SV_Target {
+                half4 color = (tex2D(_MainTex, i.uv) + _TextureSampleAdd) * i.color;
+
+                #ifdef UNITY_UI_CLIP_RECT
+                color.a *= UnityGet2DClipping(i.worldPosition.xy, _ClipRect);
+                #endif
+
+                #ifdef UNITY_UI_ALPHACLIP
+                clip(color.a - 0.001);
+                #endif
+
+                if (color.a <= 0) {
+                    return color;
+                }
+
                 float alpha = CalcAlpha(i.uv, _WidthHeightRadius.xy, _WidthHeightRadius.z);
                 return mixAlpha(tex2D(_MainTex, i.uv), i.color, alpha);
             }
