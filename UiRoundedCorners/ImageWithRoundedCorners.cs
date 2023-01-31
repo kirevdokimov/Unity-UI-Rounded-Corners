@@ -2,7 +2,6 @@
 using UnityEngine.UI;
 
 namespace Nobi.UiRoundedCorners {
-	[ExecuteInEditMode]
 	[RequireComponent(typeof(RectTransform))]
 	public class ImageWithRoundedCorners : MonoBehaviour {
 		private static readonly int Props = Shader.PropertyToID("_WidthHeightRadius");
