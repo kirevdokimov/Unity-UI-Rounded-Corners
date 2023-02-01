@@ -2,7 +2,6 @@
 using UnityEngine.UI;
 
 namespace Nobi.UiRoundedCorners {
-	[ExecuteInEditMode]
 	[RequireComponent(typeof(RectTransform))]
 	public class ImageWithIndependentRoundedCorners : MonoBehaviour {
 		private static readonly int prop_halfSize = Shader.PropertyToID("_halfSize");
