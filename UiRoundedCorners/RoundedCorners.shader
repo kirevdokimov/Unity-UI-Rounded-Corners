@@ -74,6 +74,11 @@ Shader "UI/RoundedCorners/RoundedCorners" {
                 }
 
                 float alpha = CalcAlpha(i.uv, _WidthHeightRadius.xy, _WidthHeightRadius.z);
+
+                #ifdef UNITY_UI_ALPHACLIP
+                clip(alpha - 0.001);
+                #endif
+                
                 return mixAlpha(tex2D(_MainTex, i.uv), i.color, alpha);
             }
             
