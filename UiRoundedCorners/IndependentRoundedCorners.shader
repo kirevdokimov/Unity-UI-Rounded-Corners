@@ -78,6 +78,11 @@
                 }
 
                 float alpha = CalcAlphaForIndependentCorners(i.uv, _halfSize.xy, _rect2props, _r);
+
+                #ifdef UNITY_UI_ALPHACLIP
+                clip(alpha - 0.001);
+                #endif
+                
                 return mixAlpha(tex2D(_MainTex, i.uv), i.color, alpha);
             }
             
