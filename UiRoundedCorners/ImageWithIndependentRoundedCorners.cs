@@ -1,8 +1,13 @@
-﻿using UnityEngine;
+﻿using Nobi.UiRoundedCorners;
+using UnityEditor;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace Nobi.UiRoundedCorners {
-	[RequireComponent(typeof(RectTransform))]
+namespace Nobi.UiRoundedCorners
+{
+	[ExecuteInEditMode]
+    [DisallowMultipleComponent]						//FFaUniHan: You can only have one of these in every object.
+    [RequireComponent(typeof(RectTransform))]
 	public class ImageWithIndependentRoundedCorners : MonoBehaviour {
 		private static readonly int prop_halfSize = Shader.PropertyToID("_halfSize");
 		private static readonly int prop_radiuses = Shader.PropertyToID("_r");
@@ -19,7 +24,7 @@ namespace Nobi.UiRoundedCorners {
 		// xy - position,
 		// zw - halfSize
 		[HideInInspector, SerializeField] private Vector4 rect2props;
-		[HideInInspector, SerializeField] private MaskableGraphic image;
+		[HideInInspector, SerializeField] private Image image;
 
 		private void OnValidate() {
 			Validate();
@@ -27,9 +32,16 @@ namespace Nobi.UiRoundedCorners {
 		}
 
 		private void OnEnable() {
-			Validate();
+            //FFaUniHan: You can only add either regular UI rounded corner or independent.
+            var other = GetComponent<ImageWithRoundedCorners>();
+            if (other != null)
+            {
+                DestroyHelper.Destroy(other);
+            }
+
+            Validate();
 			Refresh();
-		}
+        }
 
 		private void OnRectTransformDimensionsChange() {
 			if (enabled && material != null) {
@@ -38,7 +50,9 @@ namespace Nobi.UiRoundedCorners {
 		}
 
 		private void OnDestroy() {
-			DestroyHelper.Destroy(material);
+            image.material = null;      //FFaUniHan: This makes so that when the component is removed, the UI material returns to null
+
+            DestroyHelper.Destroy(material);
 			image = null;
 			material = null;
 		}
@@ -100,3 +114,27 @@ namespace Nobi.UiRoundedCorners {
 		}
 	}
 }
+
+//FFaUniHan: This makes the Vector4 more user-friendly 
+
+#if UNITY_EDITOR 
+[CustomEditor(typeof(ImageWithIndependentRoundedCorners))] // Replace "YourScript" with the script where you use Vector4
+public class Vector4Editor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        //DrawDefaultInspector();
+
+        serializedObject.Update();
+
+        SerializedProperty vector4Prop = serializedObject.FindProperty("r");
+
+        EditorGUILayout.PropertyField(vector4Prop.FindPropertyRelative("x"), new GUIContent("Top Left Corner"));
+        EditorGUILayout.PropertyField(vector4Prop.FindPropertyRelative("y"), new GUIContent("Top Right Corner"));
+        EditorGUILayout.PropertyField(vector4Prop.FindPropertyRelative("w"), new GUIContent("Bottom Left Corner"));
+        EditorGUILayout.PropertyField(vector4Prop.FindPropertyRelative("z"), new GUIContent("Bottom Right Corner"));
+
+        serializedObject.ApplyModifiedProperties();
+    }
+}
+#endif
