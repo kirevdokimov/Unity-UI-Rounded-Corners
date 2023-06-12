@@ -1,8 +1,12 @@
-﻿using UnityEngine;
+﻿using Nobi.UiRoundedCorners;
+using UnityEditor;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Nobi.UiRoundedCorners {
-	[RequireComponent(typeof(RectTransform))]
+    [ExecuteInEditMode]								//Required to do validation with OnEnable()
+    [DisallowMultipleComponent]                     //You can only have one of these in every object
+    [RequireComponent(typeof(RectTransform))]
 	public class ImageWithIndependentRoundedCorners : MonoBehaviour {
 		private static readonly int prop_halfSize = Shader.PropertyToID("_halfSize");
 		private static readonly int prop_radiuses = Shader.PropertyToID("_r");
@@ -13,8 +17,8 @@ namespace Nobi.UiRoundedCorners {
 		// Vector2.right rotated counter-clockwise by 45 degrees
 		private static readonly Vector2 hNorm = new Vector2(.7071068f, .7071068f);
 
-		public Vector4 r;
-		private Material material;
+        public Vector4 r = new Vector4(40f, 40f, 40f, 40f);
+        private Material material;
 
 		// xy - position,
 		// zw - halfSize
@@ -27,7 +31,16 @@ namespace Nobi.UiRoundedCorners {
 		}
 
 		private void OnEnable() {
-			Validate();
+            //You can only add either ImageWithRoundedCorners or ImageWithIndependentRoundedCorners
+			//It will replace the other component when added into the object.
+            var other = GetComponent<ImageWithRoundedCorners>();
+            if (other != null)
+            {
+                r = Vector4.one * other.radius;		//When it does, transfer the radius value to this script
+                DestroyHelper.Destroy(other);
+            }
+
+            Validate();
 			Refresh();
 		}
 
@@ -38,7 +51,9 @@ namespace Nobi.UiRoundedCorners {
 		}
 
 		private void OnDestroy() {
-			DestroyHelper.Destroy(material);
+            image.material = null;      //This makes so that when the component is removed, the UI material returns to null
+
+            DestroyHelper.Destroy(material);
 			image = null;
 			material = null;
 		}
@@ -100,3 +115,29 @@ namespace Nobi.UiRoundedCorners {
 		}
 	}
 }
+
+/// <summary>
+/// Display Vector4 as 4 separate fields for each corners.
+/// It's way easier to use than w,x,y,z in Vector4.
+/// </summary>
+#if UNITY_EDITOR 
+[CustomEditor(typeof(ImageWithIndependentRoundedCorners))]
+public class Vector4Editor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        //DrawDefaultInspector();
+
+        serializedObject.Update();
+
+        SerializedProperty vector4Prop = serializedObject.FindProperty("r");
+
+        EditorGUILayout.PropertyField(vector4Prop.FindPropertyRelative("x"), new GUIContent("Top Left Corner"));
+        EditorGUILayout.PropertyField(vector4Prop.FindPropertyRelative("y"), new GUIContent("Top Right Corner"));
+        EditorGUILayout.PropertyField(vector4Prop.FindPropertyRelative("w"), new GUIContent("Bottom Left Corner"));
+        EditorGUILayout.PropertyField(vector4Prop.FindPropertyRelative("z"), new GUIContent("Bottom Right Corner"));
+
+        serializedObject.ApplyModifiedProperties();
+    }
+}
+#endif
