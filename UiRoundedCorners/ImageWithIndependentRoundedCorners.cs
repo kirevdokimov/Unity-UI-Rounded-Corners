@@ -11,6 +11,7 @@ namespace Nobi.UiRoundedCorners {
 		private static readonly int prop_halfSize = Shader.PropertyToID("_halfSize");
 		private static readonly int prop_radiuses = Shader.PropertyToID("_r");
 		private static readonly int prop_rect2props = Shader.PropertyToID("_rect2props");
+		private static readonly int prop_OuterUV = Shader.PropertyToID("_OuterUV");
 
 		// Vector2.right rotated clockwise by 45 degrees
 		private static readonly Vector2 wNorm = new Vector2(.7071068f, -.7071068f);
@@ -19,6 +20,7 @@ namespace Nobi.UiRoundedCorners {
 
         public Vector4 r = new Vector4(40f, 40f, 40f, 40f);
         private Material material;
+		private Vector4 outerUV = new Vector4(0, 0, 1, 1);
 
 		// xy - position,
 		// zw - halfSize
@@ -70,6 +72,10 @@ namespace Nobi.UiRoundedCorners {
 			if (image != null) {
 				image.material = material;
 			}
+
+			if (image is Image uiImage && uiImage.sprite != null) {
+				outerUV = UnityEngine.Sprites.DataUtility.GetOuterUV(uiImage.sprite);
+			}
 		}
 
 		public void Refresh() {
@@ -78,6 +84,7 @@ namespace Nobi.UiRoundedCorners {
 			material.SetVector(prop_rect2props, rect2props);
 			material.SetVector(prop_halfSize, rect.size * .5f);
 			material.SetVector(prop_radiuses, r);
+			material.SetVector(prop_OuterUV, outerUV);
 		}
 
 		private void RecalculateProps(Vector2 size) {

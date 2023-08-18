@@ -15,6 +15,7 @@
         _r ("r", Vector) = (0,0,0,0)
         _halfSize ("halfSize", Vector) = (0,0,0,0)
         _rect2props ("rect2props", Vector) = (0,0,0,0)
+        _OuterUV ("image outer uv", Vector) = (0, 0, 1, 1)
         // ---
     }
     
@@ -58,11 +59,16 @@
             float4 _r;
             float4 _halfSize;
             float4 _rect2props;
+            float4 _OuterUV;
             sampler2D _MainTex;
             float4 _ClipRect;
             fixed4 _TextureSampleAdd;
 
             fixed4 frag (v2f i) : SV_Target {
+                float2 uvSample = i.uv;
+                uvSample.x = (uvSample.x - _OuterUV.x) / (_OuterUV.z - _OuterUV.x);
+                uvSample.y = (uvSample.y - _OuterUV.y) / (_OuterUV.w - _OuterUV.y);
+
                 half4 color = (tex2D(_MainTex, i.uv) + _TextureSampleAdd) * i.color;
 
                 #ifdef UNITY_UI_CLIP_RECT
@@ -77,7 +83,7 @@
                     return color;
                 }
 
-                float alpha = CalcAlphaForIndependentCorners(i.uv, _halfSize.xy, _rect2props, _r);
+                float alpha = CalcAlphaForIndependentCorners(uvSample, _halfSize.xy, _rect2props, _r);
 
                 #ifdef UNITY_UI_ALPHACLIP
                 clip(alpha - 0.001);
