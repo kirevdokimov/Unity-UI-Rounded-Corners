@@ -51,7 +51,9 @@ namespace Nobi.UiRoundedCorners {
 		}
 
 		private void OnDestroy() {
-            image.material = null;      //This makes so that when the component is removed, the UI material returns to null
+			if (image != null) {
+				image.material = null;      //This makes so that when the component is removed, the UI material returns to null
+			}
 
             DestroyHelper.Destroy(material);
 			image = null;
