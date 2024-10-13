@@ -13,6 +13,8 @@ struct v2f {
     UNITY_VERTEX_OUTPUT_STEREO
 };
 
+int _UIVertexColorAlwaysGammaSpace;
+
 v2f vert (appdata v) {
     v2f o;
     UNITY_SETUP_INSTANCE_ID(v);
@@ -22,6 +24,9 @@ v2f vert (appdata v) {
     o.vertex = UnityObjectToClipPos(v.vertex);
     o.uv = v.uv;
     o.color = v.color;
+    if (_UIVertexColorAlwaysGammaSpace)
+        if(!IsGammaSpace())
+            o.color = float4(UIGammaToLinear(o.color.xyz), o.color.w);
     return o;
 }
 
