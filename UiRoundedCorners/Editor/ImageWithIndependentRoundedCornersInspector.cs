@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine.UI;
 
 namespace Nobi.UiRoundedCorners.Editor {
-    [CustomEditor(typeof(ImageWithIndependentRoundedCorners))]
+    [CustomEditor(typeof(ImageWithIndependentRoundedCorners)), CanEditMultipleObjects]
     public class ImageWithIndependentRoundedCornersInspector : UnityEditor.Editor {
         private ImageWithIndependentRoundedCorners script;
 
