@@ -16,8 +16,8 @@ namespace Nobi.UiRoundedCorners {
 		[HideInInspector, SerializeField] private MaskableGraphic image;
 
 		private void OnValidate() {
-			Validate();
-			Refresh();
+				Validate();
+				Refresh();
 		}
 
 		private void OnDestroy() {
@@ -50,16 +50,25 @@ namespace Nobi.UiRoundedCorners {
 		}
 
 		public void Validate() {
-			if (material == null) {
-				material = new Material(Shader.Find("UI/RoundedCorners/RoundedCorners"));
-			}
 
 			if (image == null) {
 				TryGetComponent(out image);
 			}
+			
+			if (material == null) {
+				if(image.material != null) {
+					material = image.material;
+				} else {
+					material = new Material(Shader.Find("Nobi/UI Rounded Corners"));
+            		material.hideFlags = HideFlags.HideAndDontSave;
+				}
+			}
 
 			if (image != null) {
-				image.material = material;
+#if UNITY_EDITOR
+                if (Application.isPlaying)
+					image.material = material;
+#endif
 			}
 
 			if (image is Image uiImage && uiImage.sprite != null) {
