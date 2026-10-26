@@ -55,39 +55,36 @@ Shader "UI/RoundedCorners/RoundedCorners" {
             #pragma multi_compile_local _ UNITY_UI_ALPHACLIP
 
             float4 _WidthHeightRadius;
-            float4 _OuterUV;
+            half4  _OuterUV;
             sampler2D _MainTex;
             fixed4 _TextureSampleAdd;
             float4 _ClipRect;
 
             fixed4 frag (v2f i) : SV_Target {
-                float2 uvSample = i.uv;
-                uvSample.x = (uvSample.x - _OuterUV.x) / (_OuterUV.z - _OuterUV.x);
-                uvSample.y = (uvSample.y - _OuterUV.y) / (_OuterUV.w - _OuterUV.y);
+                half4 textureColor = tex2D(_MainTex, i.uv);
+                half4 color = (textureColor + _TextureSampleAdd) * i.color;
 
-                half4 color = (tex2D(_MainTex, i.uv) + _TextureSampleAdd) * i.color;
-
+                // Apply standard UI clipping first
                 #ifdef UNITY_UI_CLIP_RECT
                 color.a *= UnityGet2DClipping(i.worldPosition.xy, _ClipRect);
                 #endif
 
+                // Remap UVs for the SDF calculation
+                half2 uvSample = i.uv;
+                uvSample = (uvSample - _OuterUV.xy) / (_OuterUV.zw - _OuterUV.xy);
+
+                // Calculate the rounded corner alpha using a Signed Distance Field
+                half sdfAlpha = CalcAlpha(uvSample, _WidthHeightRadius.xy, _WidthHeightRadius.z);
+
+                // Combine the procedural alpha with the texture's alpha
+                color.a *= sdfAlpha;
+
                 #ifdef UNITY_UI_ALPHACLIP
                 clip(color.a - 0.001);
                 #endif
-
-                if (color.a <= 0) {
-                    return color;
-                }
-
-                float alpha = CalcAlpha(uvSample, _WidthHeightRadius.xy, _WidthHeightRadius.z);
-
-                #ifdef UNITY_UI_ALPHACLIP
-                clip(alpha - 0.001);
-                #endif
                 
-                return mixAlpha(tex2D(_MainTex, i.uv), i.color, alpha);
+                return color;
             }
-            
             ENDCG
         }
     }
