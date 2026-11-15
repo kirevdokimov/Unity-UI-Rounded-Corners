@@ -41,6 +41,23 @@ namespace Nobi.UiRoundedCorners {
 
 			Validate();
 			Refresh();
+
+			if (image != null) {
+				image.RegisterDirtyVerticesCallback(OnImageVerticesDirty);
+			}
+		}
+
+		private void OnDisable() {
+			if (image != null) {
+				image.UnregisterDirtyVerticesCallback(OnImageVerticesDirty);
+			}
+		}
+
+		//Called by the graphic when its sprite (or anything else affecting its vertices) changes.
+		private void OnImageVerticesDirty() {
+			if (enabled && material != null) {
+				Refresh();
+			}
 		}
 
 		private void OnRectTransformDimensionsChange() {
@@ -61,14 +78,14 @@ namespace Nobi.UiRoundedCorners {
 			if (image != null) {
 				image.material = material;
 			}
-
-			if (image is Image uiImage && uiImage.sprite != null) {
-				outerUV = UnityEngine.Sprites.DataUtility.GetOuterUV(uiImage.sprite);
-			}
 		}
 
 		public void Refresh() {
 			var rect = ((RectTransform)transform).rect;
+			//Read the outer UV on every refresh so that changing the sprite (e.g. to another atlas region) keeps the image visible.
+			outerUV = image is Image uiImage && uiImage.sprite != null
+				? UnityEngine.Sprites.DataUtility.GetOuterUV(uiImage.sprite)
+				: new Vector4(0, 0, 1, 1);
 
 			//Multiply radius value by 2 to make the radius value appear consistent with ImageWithIndependentRoundedCorners script.
 			//Right now, the ImageWithIndependentRoundedCorners appears to have double the radius than this.
